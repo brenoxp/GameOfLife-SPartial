@@ -1,10 +1,13 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.view
+
 
 import scala.io.StdIn.{readInt, readLine}
+import br.unb.cic.poo.gol.controller.GameController
+import br.unb.cic.poo.gol.model.GameEngine
 
-object GameView {
-  
-	private final val LINE = "+-----+"
+
+object CommandLineView extends GameView {
+  private final val LINE = "+-----+"
 	private final val DEAD_CELL = "|     |"
 	private final val ALIVE_CELL = "|  o  |"
 	
@@ -14,11 +17,9 @@ object GameView {
 	private final val HALT = 3
 	
   
-  
-  
   /**
 	 * Atualiza o componente view (representado pela classe GameBoard),
-	 * possivelmente como uma resposta a uma atualiza��o do jogo.
+	 * possivelmente como uma resposta a uma atualizacao do jogo.
 	 */
 	def update {
 		printFirstRow
@@ -83,7 +84,7 @@ object GameView {
 		i >= 0 && i < GameEngine.height && j >= 0 && j < GameEngine.width
 	}
   
-	def parseOption(option: String): Int = option match {
+	private def parseOption(option: String): Int = option match {
     case "1" => MAKE_CELL_ALIVE
     case "2" => NEXT_GENERATION
     case "3" => HALT
@@ -110,5 +111,4 @@ object GameView {
 		}
 		println()
 	}
-  
 }

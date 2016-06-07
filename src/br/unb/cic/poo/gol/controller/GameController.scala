@@ -1,9 +1,16 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.controller
+
+import br.unb.cic.poo.gol.model.GameEngine
+import br.unb.cic.poo.gol.view.GameView
+import br.unb.cic.poo.gol.view.Statistics
+import br.unb.cic.poo.gol.Main
 
 object GameController {
   
+  val view = Main.view
+  
   def start {
-    GameView.update
+    view.update
   }
   
   def halt() {
@@ -16,7 +23,7 @@ object GameController {
   def makeCellAlive(i: Int, j: Int) {
     try {
 			GameEngine.makeCellAlive(i, j)
-			GameView.update
+			view.update
 		}
 		catch {
 		  case ex: IllegalArgumentException => {
@@ -27,7 +34,7 @@ object GameController {
   
   def nextGeneration {
     GameEngine.nextGeneration
-    GameView.update
+    view.update
   }
   
 }

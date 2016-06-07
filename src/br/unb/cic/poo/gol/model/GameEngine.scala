@@ -1,8 +1,9 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.model
 
 import scala.collection.mutable.ListBuffer
-import scala.util.control.TailCalls.TailRec
-import scala.annotation.tailrec
+import br.unb.cic.poo.gol.view.Cell
+import br.unb.cic.poo.gol.Main
+import br.unb.cic.poo.gol.view.Statistics
 
 object GameEngine {
   
