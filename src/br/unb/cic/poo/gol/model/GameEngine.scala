@@ -3,7 +3,7 @@ package br.unb.cic.poo.gol.model
 import scala.collection.mutable.ListBuffer
 import br.unb.cic.poo.gol.view.Cell
 import br.unb.cic.poo.gol.Main
-import br.unb.cic.poo.gol.view.Statistics
+import br.unb.cic.poo.gol.view.commandline.Statistics
 
 object GameEngine {
   
@@ -153,5 +153,15 @@ object GameEngine {
     }
     alive
   }
+  
+  
+  def halt() {
+    println("\n \n")
+    Statistics.display
+    System.exit(0)
+  }
+  
+  
+  
 
 }

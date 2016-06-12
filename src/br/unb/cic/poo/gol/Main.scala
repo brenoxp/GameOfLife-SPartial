@@ -1,9 +1,9 @@
 package br.unb.cic.poo.gol
 
-import scala.collection.mutable.ListBuffer
 import br.unb.cic.poo.gol.controller.GameController
 import br.unb.cic.poo.gol.view.GameView
-import br.unb.cic.poo.gol.view.CommandLineView
+import br.unb.cic.poo.gol.view.commandline.CommandLineView
+import br.unb.cic.poo.gol.view.gui.GUIView
 import br.unb.cic.poo.gol.view.gui.GUIView
 
 object Main {
@@ -11,13 +11,16 @@ object Main {
   val height = 10
   val width = 10
   
-//  val view = CommandLineView
-  val view = new GUIView
+  var chooseViewType = 1
+  var view: GameView = null;
   
-  def main(args: Array[String]){
-    
-    view.startup(Array("test"))
-    
+  if(chooseViewType == 0) {
+    view = CommandLineView
+  } else {
+    view = GUIView  
+  }
+  
+  def main(args: Array[String]){ 
     GameController.start
   }
 }

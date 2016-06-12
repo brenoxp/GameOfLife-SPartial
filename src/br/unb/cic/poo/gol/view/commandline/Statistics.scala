@@ -1,4 +1,4 @@
-package br.unb.cic.poo.gol.view
+package br.unb.cic.poo.gol.view.commandline
 
 object Statistics {
   

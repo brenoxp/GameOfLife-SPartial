@@ -1,9 +1,10 @@
-package br.unb.cic.poo.gol.view
+package br.unb.cic.poo.gol.view.commandline
 
 
 import scala.io.StdIn.{readInt, readLine}
 import br.unb.cic.poo.gol.controller.GameController
 import br.unb.cic.poo.gol.model.GameEngine
+import br.unb.cic.poo.gol.view.GameView
 
 
 object CommandLineView extends GameView {
@@ -16,6 +17,9 @@ object CommandLineView extends GameView {
 	private final val NEXT_GENERATION = 2
 	private final val HALT = 3
 	
+	def startView {
+    update
+  }
   
   /**
 	 * Atualiza o componente view (representado pela classe GameBoard),
