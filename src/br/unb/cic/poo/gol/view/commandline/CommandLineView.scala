@@ -15,7 +15,8 @@ object CommandLineView extends GameView {
 	private final val INVALID_OPTION = 0
 	private final val MAKE_CELL_ALIVE = 1
 	private final val NEXT_GENERATION = 2
-	private final val HALT = 3
+	private final val MAKE_RANDOM_CELLS_ALIVE = 3
+	private final val HALT = 4
 	
 	def startView {
     update
@@ -48,7 +49,8 @@ object CommandLineView extends GameView {
 	    println("Select one of the options: \n \n"); 
 			println("[1] Make a cell alive");
 			println("[2] Next generation");
-			println("[3] Halt");
+			println("[3] Make random cells alive");
+			println("[4] Halt");
 		
 			print("\n \n Option: ");
 			
@@ -58,6 +60,7 @@ object CommandLineView extends GameView {
 	  option match {
       case MAKE_CELL_ALIVE => makeCellAlive
       case NEXT_GENERATION => nextGeneration
+      case MAKE_RANDOM_CELLS_ALIVE => randomCellsAlive
       case HALT => halt
     }
 	}
@@ -80,6 +83,7 @@ object CommandLineView extends GameView {
 	}
 
   private def nextGeneration = GameController.nextGeneration
+  private def randomCellsAlive = GameController.randomCellsAlive
   private def halt = GameController.halt
 	
   private def validPosition(i: Int, j: Int): Boolean = {
@@ -91,7 +95,8 @@ object CommandLineView extends GameView {
 	private def parseOption(option: String): Int = option match {
     case "1" => MAKE_CELL_ALIVE
     case "2" => NEXT_GENERATION
-    case "3" => HALT
+    case "3" => MAKE_RANDOM_CELLS_ALIVE
+    case "4" => HALT
     case _ => INVALID_OPTION
   }
 	

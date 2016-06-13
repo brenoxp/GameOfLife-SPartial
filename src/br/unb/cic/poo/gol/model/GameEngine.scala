@@ -4,6 +4,7 @@ import scala.collection.mutable.ListBuffer
 import br.unb.cic.poo.gol.view.Cell
 import br.unb.cic.poo.gol.Main
 import br.unb.cic.poo.gol.view.commandline.Statistics
+import br.unb.cic.poo.gol.controller.GameController
 
 object GameEngine {
   
@@ -152,6 +153,26 @@ object GameEngine {
       }
     }
     alive
+  }
+  
+  def randomCellsAlive() {    
+    for(i <- (0 until height)) {
+      for(j <- (0 until width)) {
+        
+        val randomValue = scala.util.Random.nextInt(100)
+        
+        if(randomValue < 50) {
+          cells(i)(j).revive
+          Statistics.recordRevive
+        } else {
+          cells(i)(j).kill
+          Statistics.recordRevive
+        }
+        
+      }
+    }
+    
+    GameController.updateView
   }
   
   

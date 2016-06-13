@@ -11,7 +11,7 @@ object Main {
   val height = 10
   val width = 10
   
-  var chooseViewType = 1
+  var chooseViewType = 0
   var view: GameView = null;
   
   if(chooseViewType == 0) {

@@ -13,8 +13,6 @@ object GameController {
     view.startView
   }
   
-  
-
   def makeCellAlive(i: Int, j: Int) {
     try {
 			GameEngine.makeCellAlive(i, j)
@@ -29,11 +27,19 @@ object GameController {
   
   def nextGeneration {
     GameEngine.nextGeneration
+    updateView
+  }
+  
+  def updateView {
     view.update
   }
   
+  def randomCellsAlive {
+    GameEngine.randomCellsAlive
+  }
+  
   def halt {
-    GameEngine.halt()
+    GameEngine.halt
   }
   
 }
