@@ -41,7 +41,6 @@ object CommandLineView extends GameView {
 	}
   
   private def printOptions {
-	  
 	  var option = 0
 	  println("\n\n")
 	  
@@ -66,7 +65,6 @@ object CommandLineView extends GameView {
 	}
   
   private def makeCellAlive {
-	  
 	  var i = 0
 	  var j = 0
 	  
