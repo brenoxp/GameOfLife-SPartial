@@ -147,13 +147,42 @@ object GameEngine {
     var alive = 0
     for(a <- (i - 1 to i + 1)) {
       for(b <- (j - 1 to j + 1)) {
-        if (validPosition(a, b)  && (!(a==i && b == j)) && cells(a)(b).isAlive) {
+        val a1 = convertIToInfiniteWorld(a)
+				val b1 = convertJToInfiniteWorld(b)
+        
+//				val a1 = a
+//				val b1 = b
+				
+        if (validPosition(a1, b1)  && (!(a1==i && b1 == j)) && cells(a1)(b1).isAlive) {
 					alive += 1
 				}
       }
     }
     alive
   }
+  
+
+  
+   /* 
+  	 * Verifica se i eh uma posicao menor do que a origem do eixo x, 
+  	 * caso seja, i passa a ser o maior valor aceito de x.
+  	 * Se i for uma posicao maior do que o maior valor aceito para o eixo x,
+  	 * entao o valor de i passa a ser o menor valor aceito de x.
+	 */
+  def convertIToInfiniteWorld(i: Int): Int = {
+    if(i == -1) width - 1 
+    else if(i == width) 0
+    i
+  }
+  
+  /* O memso tratamento para j */
+  def convertJToInfiniteWorld(j: Int): Int = {
+    if(j == -1) height - 1 
+    else if(j == height) 0
+    j
+  }
+  
+  
   
   def randomCellsAlive() {    
     for(i <- (0 until height)) {
