@@ -5,6 +5,8 @@ import scala.io.StdIn.{readInt, readLine}
 import br.unb.cic.poo.gol.controller.GameController
 import br.unb.cic.poo.gol.model.GameEngine
 import br.unb.cic.poo.gol.view.GameView
+import br.unb.cic.poo.gol.Main
+import br.unb.cic.poo.gol.model.ManufactureOfRules
 
 
 object CommandLineView extends GameView {
@@ -16,7 +18,8 @@ object CommandLineView extends GameView {
 	private final val MAKE_CELL_ALIVE = 1
 	private final val NEXT_GENERATION = 2
 	private final val MAKE_RANDOM_CELLS_ALIVE = 3
-	private final val HALT = 4
+	private final val CHANGE_RULE = 4
+	private final val HALT = 5
 	
 	def startView {
     update
@@ -49,7 +52,8 @@ object CommandLineView extends GameView {
 			println("[1] Make a cell alive");
 			println("[2] Next generation");
 			println("[3] Make random cells alive");
-			println("[4] Halt");
+			println("[4] Change rule");
+			println("[5] Halt");
 		
 			print("\n \n Option: ");
 			
@@ -60,9 +64,34 @@ object CommandLineView extends GameView {
       case MAKE_CELL_ALIVE => makeCellAlive
       case NEXT_GENERATION => nextGeneration
       case MAKE_RANDOM_CELLS_ALIVE => randomCellsAlive
+      case CHANGE_RULE => changeRule
       case HALT => halt
     }
 	}
+  
+  
+  private def changeRule(){
+    println("Select one of the rules: \n \n"); 
+		println("[1] Conway");
+		println("[2] Maze");
+		println("[3] Day Night");
+		println("[4] Walled Cities");
+		println("[5] Cancel");
+		
+		print("\n \n Option: ");
+		
+		val option = readLine
+		
+		Main.rule = option match {
+		  case "1" => ManufactureOfRules.getRule(1)
+		  case "2" => ManufactureOfRules.getRule(2)
+		  case "3" => ManufactureOfRules.getRule(3)
+		  case "4" => ManufactureOfRules.getRule(4)
+		}
+		
+		update
+		printOptions
+  }
   
   private def makeCellAlive {
 	  var i = 0
@@ -94,7 +123,8 @@ object CommandLineView extends GameView {
     case "1" => MAKE_CELL_ALIVE
     case "2" => NEXT_GENERATION
     case "3" => MAKE_RANDOM_CELLS_ALIVE
-    case "4" => HALT
+    case "4" => CHANGE_RULE
+    case "5" => HALT
     case _ => INVALID_OPTION
   }
 	

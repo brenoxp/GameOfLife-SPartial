@@ -12,7 +12,7 @@ object Main {
   val height = 10
   val width = 10
   
-  val rule = ManufactureOfRules.getRule(0)
+  var rule = ManufactureOfRules.getRule(1)
   val view = ManufactureOfViews.getView(0)
   
   def main(args: Array[String]){ 

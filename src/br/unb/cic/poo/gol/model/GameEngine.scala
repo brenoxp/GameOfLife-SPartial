@@ -40,6 +40,7 @@ object GameEngine {
   
   def nextGeneration {
     
+    
     val mustRevive = new ListBuffer[Cell]
     val mustKill = new ListBuffer[Cell]
 

@@ -10,10 +10,10 @@ object ManufactureOfRules {
   
   def getRule(i: Int): Rule = {
     i match {
-      case 0 => Conway
-      case 1 => Maze
-      case 2 => DayNight
-      case 3 => WalledCities
+      case 1 => Conway
+      case 2 => Maze
+      case 3 => DayNight
+      case 4 => WalledCities
     }
   }
   
