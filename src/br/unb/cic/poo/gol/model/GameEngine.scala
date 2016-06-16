@@ -5,6 +5,7 @@ import br.unb.cic.poo.gol.view.Cell
 import br.unb.cic.poo.gol.Main
 import br.unb.cic.poo.gol.view.commandline.Statistics
 import br.unb.cic.poo.gol.controller.GameController
+import br.unb.cic.poo.gol.model.rules.Rule
 
 object GameEngine {
   
@@ -13,6 +14,9 @@ object GameEngine {
   
   val cells = Array.ofDim[Cell](height, width)
   
+  //Rule deve ser definido como def pois sua avaliação deve ser feita sempre que
+  //for chamada. Isso porque poderá ser alterada durante a execução do programa
+  def rule = Main.rule
   
   for(i <- (0 until height)) {
     for(j <- (0 until width)) {
@@ -42,10 +46,11 @@ object GameEngine {
     
     for(i <- (0 until height)) {
       for(j <- (0 until width)) {
-        if(shouldRevive(i, j)) {
+        
+        if(rule.shouldRevive(cells(i)(j).isAlive, numberOfNeighborhoodAliveCells(i, j))){
           mustRevive += cells(i)(j)
         }
-        else if((!shouldKeepAlive(i, j)) && cells(i)(j).isAlive) {
+        else if(!rule.shouldKeepAlive(cells(i)(j).isAlive, numberOfNeighborhoodAliveCells(i, j))){
           mustKill += cells(i)(j)
         }
       }
@@ -126,17 +131,17 @@ object GameEngine {
   }
   
   
-  /* verifica se uma celula deve ser mantida viva */
-  private def shouldKeepAlive(i: Int, j: Int): Boolean = {
-    (cells(i)(j).isAlive) &&
-      (numberOfNeighborhoodAliveCells(i, j) == 2 || numberOfNeighborhoodAliveCells(i, j) == 3)
-  }
-  
-  /* verifica se uma celula deve (re)nascer */
-  private def shouldRevive(i: Int, j: Int): Boolean = {
-    (!cells(i)(j).isAlive) && 
-      (numberOfNeighborhoodAliveCells(i, j) == 3)
-  }
+//  /* verifica se uma celula deve ser mantida viva */
+//  private def shouldKeepAlive(i: Int, j: Int): Boolean = {
+//    (cells(i)(j).isAlive) &&
+//      (numberOfNeighborhoodAliveCells(i, j) == 2 || numberOfNeighborhoodAliveCells(i, j) == 3)
+//  }
+//  
+//  /* verifica se uma celula deve (re)nascer */
+//  private def shouldRevive(i: Int, j: Int): Boolean = {
+//    (!cells(i)(j).isAlive) && 
+//      (numberOfNeighborhoodAliveCells(i, j) == 3)
+//  }
 
   
   /*
@@ -149,9 +154,6 @@ object GameEngine {
       for(b <- (j - 1 to j + 1)) {
         val a1 = convertIToInfiniteWorld(a)
 				val b1 = convertJToInfiniteWorld(b)
-        
-//				val a1 = a
-//				val b1 = b
 				
         if (validPosition(a1, b1)  && (!(a1==i && b1 == j)) && cells(a1)(b1).isAlive) {
 					alive += 1
@@ -181,8 +183,6 @@ object GameEngine {
     else if(j == height) 0
     j
   }
-  
-  
   
   def randomCellsAlive() {    
     for(i <- (0 until height)) {
