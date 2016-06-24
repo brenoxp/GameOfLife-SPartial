@@ -1,9 +1,6 @@
 package br.unb.cic.poo.gol
 
 import br.unb.cic.poo.gol.controller.GameController
-import br.unb.cic.poo.gol.view.GameView
-import br.unb.cic.poo.gol.view.commandline.CommandLineView
-import br.unb.cic.poo.gol.view.gui.GUIView
 import br.unb.cic.poo.gol.model.ManufactureOfRules
 import br.unb.cic.poo.gol.model.ManufactureOfViews
 

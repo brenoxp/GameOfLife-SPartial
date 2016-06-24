@@ -8,4 +8,10 @@ class Cell {
   
   def kill = alive = false
   def revive = alive = true
+  
+  override def clone: Cell = {
+    val cell = new Cell
+    cell.alive = isAlive
+    cell
+  }
 }

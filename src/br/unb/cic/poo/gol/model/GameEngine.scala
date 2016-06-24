@@ -12,18 +12,20 @@ object GameEngine {
   val height = Main.height
   val width = Main.width
   
-  val cells = Array.ofDim[Cell](height, width)
+  val cells = Array.ofDim[Cell](height * width) map { x => new Cell }
+  HistoryStates.add(cells)
   
   //Rule deve ser definido como def pois sua avaliação deve ser feita sempre que
   //for chamada. Isso porque poderá ser alterada durante a execução do programa
   def rule = Main.rule
   
-  for(i <- (0 until height)) {
-    for(j <- (0 until width)) {
-      cells(i)(j) = new Cell
-    }
+  private def getListCellsItem(i: Int, j: Int): Cell ={
+    cells(i * width + j)
   }
-
+  
+  private def setListCellsItem(i: Int, j: Int, cell: Cell){
+    cells(i * width + j) = cell
+  }
 
   /**
 	 * Calcula uma nova geracao do ambiente. Essa implementacao utiliza o
@@ -39,24 +41,22 @@ object GameEngine {
 	 */
   
   def nextGeneration {
-    
+    HistoryStates.add(cells)
     
     val mustRevive = new ListBuffer[Cell]
     val mustKill = new ListBuffer[Cell]
 
-    
     for(i <- (0 until height)) {
       for(j <- (0 until width)) {
         
-        if(rule.shouldRevive(cells(i)(j).isAlive, numberOfNeighborhoodAliveCells(i, j))){
-          mustRevive += cells(i)(j)
+        if(rule.shouldRevive(getListCellsItem(i,j).isAlive, numberOfNeighborhoodAliveCells(i, j))){
+          mustRevive += getListCellsItem(i,j)
         }
-        else if(!rule.shouldKeepAlive(cells(i)(j).isAlive, numberOfNeighborhoodAliveCells(i, j))){
-          mustKill += cells(i)(j)
+        else if(!rule.shouldKeepAlive(getListCellsItem(i,j).isAlive, numberOfNeighborhoodAliveCells(i, j))){
+          mustKill += getListCellsItem(i,j)
         }
       }
     }
-    
     
     for(cell <- mustRevive) {
       cell.revive
@@ -68,8 +68,20 @@ object GameEngine {
       Statistics.recordKill
     }
     
-    
+    GameController.updateView
   }
+  
+  def undoGeneration {
+    if(HistoryStates.canUndo){
+      val cellsUndo = HistoryStates.undo
+      for(i <- 0 until cellsUndo.length){
+        if(cellsUndo(i).isAlive) cells(i).revive
+        else cells(i).kill
+      }
+    }
+    GameController.updateView
+  }
+  
 
   /*
 	 * Verifica se uma posicao (a, b) referencia uma celula valida no tabuleiro.
@@ -89,7 +101,7 @@ object GameEngine {
   @throws(classOf[IllegalArgumentException])
   def makeCellAlive(i: Int, j: Int) = {
     if(validPosition(i, j)){
-      cells(i)(j).revive
+      getListCellsItem(i,j).revive
       Statistics.recordRevive
     } else {
       throw new IllegalArgumentException
@@ -108,7 +120,7 @@ object GameEngine {
   @throws(classOf[IllegalArgumentException])
   def isCellAlive(i: Int, j: Int): Boolean = {
     if(validPosition(i, j)) {
-      cells(i)(j).isAlive
+      getListCellsItem(i,j).isAlive
     } else {
       throw new IllegalArgumentException
     }
@@ -123,27 +135,9 @@ object GameEngine {
 	 * @return  numero de celulas vivas.
 	 */
   def numberOfAliveCells {
-    var aliveCells = 0
-    for(i <- (0 until height)) {
-      for(j <- (0 until width)) {
-        if(isCellAlive(i, j)) aliveCells += 1
-      }
-    }
+    var aliveCells = 0    
+    for(cell <- cells) if(cell.isAlive) aliveCells += 1
   }
-  
-  
-//  /* verifica se uma celula deve ser mantida viva */
-//  private def shouldKeepAlive(i: Int, j: Int): Boolean = {
-//    (cells(i)(j).isAlive) &&
-//      (numberOfNeighborhoodAliveCells(i, j) == 2 || numberOfNeighborhoodAliveCells(i, j) == 3)
-//  }
-//  
-//  /* verifica se uma celula deve (re)nascer */
-//  private def shouldRevive(i: Int, j: Int): Boolean = {
-//    (!cells(i)(j).isAlive) && 
-//      (numberOfNeighborhoodAliveCells(i, j) == 3)
-//  }
-
   
   /*
 	 * Computa o numero de celulas vizinhas vivas, dada uma posicao no ambiente
@@ -156,15 +150,13 @@ object GameEngine {
         val a1 = convertIToInfiniteWorld(a)
 				val b1 = convertJToInfiniteWorld(b)
 				
-        if (validPosition(a1, b1)  && (!(a1==i && b1 == j)) && cells(a1)(b1).isAlive) {
+        if (validPosition(a1, b1)  && (!(a1==i && b1 == j)) && getListCellsItem(a1,b1).isAlive) {
 					alive += 1
 				}
       }
     }
     alive
   }
-  
-
   
    /* 
   	 * Verifica se i eh uma posicao menor do que a origem do eixo x, 
@@ -178,30 +170,20 @@ object GameEngine {
     i
   }
   
-  /* O memso tratamento para j */
+  /* O mesmo tratamento para j */
   def convertJToInfiniteWorld(j: Int): Int = {
     if(j == -1) height - 1 
     else if(j == height) 0
     j
   }
   
-  def randomCellsAlive() {    
-    for(i <- (0 until height)) {
-      for(j <- (0 until width)) {
-        
-        val randomValue = scala.util.Random.nextInt(100)
-        
-        if(randomValue < 50) {
-          cells(i)(j).revive
-          Statistics.recordRevive
-        } else {
-          cells(i)(j).kill
-          Statistics.recordRevive
-        }
-        
-      }
-    }
+  /* faz com que um número aleatório de células fiquem vivas*/
+  def randomCellsAlive() {
+    HistoryStates.add(cells)
     
+    def randomValue = scala.util.Random.nextInt(100)
+    for(cell <- cells) if(randomValue < 50) cell.revive else cell.kill
+   
     GameController.updateView
   }
   

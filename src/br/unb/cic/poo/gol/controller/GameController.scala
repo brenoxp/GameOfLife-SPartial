@@ -8,10 +8,7 @@ import br.unb.cic.poo.gol.Main
 object GameController {
   
   val view = Main.view
-  
-  def start {
-    view.startView
-  }
+  def start = view.startView
   
   def makeCellAlive(i: Int, j: Int) {
     try {
@@ -25,21 +22,10 @@ object GameController {
 		}
   }
   
-  def nextGeneration {
-    GameEngine.nextGeneration
-    updateView
-  }
-  
-  def updateView {
-    view.update
-  }
-  
-  def randomCellsAlive {
-    GameEngine.randomCellsAlive
-  }
-  
-  def halt {
-    GameEngine.halt
-  }
+  def nextGeneration = GameEngine.nextGeneration
+  def updateView = view.update
+  def randomCellsAlive = GameEngine.randomCellsAlive
+  def undo = GameEngine.undoGeneration
+  def halt = GameEngine.halt
   
 }

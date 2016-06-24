@@ -7,19 +7,21 @@ import br.unb.cic.poo.gol.model.GameEngine
 import br.unb.cic.poo.gol.view.GameView
 import br.unb.cic.poo.gol.Main
 import br.unb.cic.poo.gol.model.ManufactureOfRules
+import br.unb.cic.poo.gol.model.HistoryStates
 
 
 object CommandLineView extends GameView {
-  private final val LINE = "+-----+"
-	private final val DEAD_CELL = "|     |"
-	private final val ALIVE_CELL = "|  o  |"
+  private val LINE = "+-----+"
+	private val DEAD_CELL = "|     |"
+	private val ALIVE_CELL = "|  o  |"
 	
-	private final val INVALID_OPTION = 0
-	private final val MAKE_CELL_ALIVE = 1
-	private final val NEXT_GENERATION = 2
-	private final val MAKE_RANDOM_CELLS_ALIVE = 3
-	private final val CHANGE_RULE = 4
-	private final val HALT = 5
+	private val INVALID_OPTION = 0
+	private val MAKE_CELL_ALIVE = 1
+	private val NEXT_GENERATION = 2
+	private val MAKE_RANDOM_CELLS_ALIVE = 3
+	private val UNDO = 4
+	private val CHANGE_RULE = 5
+	private val HALT = 6
 	
 	def startView {
     update
@@ -48,13 +50,20 @@ object CommandLineView extends GameView {
 	  println("\n\n")
 	  
 	  do{
-	    println("Select one of the options: \n \n"); 
-			println("[1] Make a cell alive");
-			println("[2] Next generation");
-			println("[3] Make random cells alive");
-			println("[4] Change rule");
-			println("[5] Halt");
-		
+	    println("Select one of the options: \n \n") 
+			println("[1] Make a cell alive")
+			println("[2] Next generation")
+			println("[3] Make random cells alive")
+			
+			if(HistoryStates.canUndo) {
+			  println("[4] Undo")
+			  println("[5] Change rule")
+			  println("[6] Halt")
+			} else {
+			  println("[4] Change rule")
+			  println("[5] Halt")  
+			}
+			
 			print("\n \n Option: ");
 			
 			option = parseOption(readLine)
@@ -64,6 +73,7 @@ object CommandLineView extends GameView {
       case MAKE_CELL_ALIVE => makeCellAlive
       case NEXT_GENERATION => nextGeneration
       case MAKE_RANDOM_CELLS_ALIVE => randomCellsAlive
+      case UNDO => undo
       case CHANGE_RULE => changeRule
       case HALT => halt
     }
@@ -87,6 +97,7 @@ object CommandLineView extends GameView {
 		  case "2" => ManufactureOfRules.getRule(2)
 		  case "3" => ManufactureOfRules.getRule(3)
 		  case "4" => ManufactureOfRules.getRule(4)
+		  case _ => Main.rule
 		}
 		
 		update
@@ -103,7 +114,6 @@ object CommandLineView extends GameView {
       
       print("\n Inform the column number (0 - " + (GameEngine.width - 1) + "): ")
       j = readInt
-      
     } while(!validPosition(i,j))
       
     GameController.makeCellAlive(i, j)
@@ -111,6 +121,7 @@ object CommandLineView extends GameView {
 
   private def nextGeneration = GameController.nextGeneration
   private def randomCellsAlive = GameController.randomCellsAlive
+  private def undo = GameController.undo
   private def halt = GameController.halt
 	
   private def validPosition(i: Int, j: Int): Boolean = {
@@ -119,13 +130,28 @@ object CommandLineView extends GameView {
 		i >= 0 && i < GameEngine.height && j >= 0 && j < GameEngine.width
 	}
   
-	private def parseOption(option: String): Int = option match {
-    case "1" => MAKE_CELL_ALIVE
-    case "2" => NEXT_GENERATION
-    case "3" => MAKE_RANDOM_CELLS_ALIVE
-    case "4" => CHANGE_RULE
-    case "5" => HALT
-    case _ => INVALID_OPTION
+  private def parseOption(option: String): Int = {
+    
+    if(HistoryStates.canUndo){
+      option match {
+        case "1" => MAKE_CELL_ALIVE
+        case "2" => NEXT_GENERATION
+        case "3" => MAKE_RANDOM_CELLS_ALIVE
+        case "4" => UNDO
+        case "5" => CHANGE_RULE
+        case "6" => HALT
+        case _ => INVALID_OPTION 
+      }
+    } else {
+      option match {
+        case "1" => MAKE_CELL_ALIVE
+        case "2" => NEXT_GENERATION
+        case "3" => MAKE_RANDOM_CELLS_ALIVE
+        case "4" => CHANGE_RULE
+        case "5" => HALT
+        case _ => INVALID_OPTION 
+      }
+    }
   }
 	
   
